@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import type { FormEvent } from 'react';
 import SiteHeader from './components/SiteHeader';
-import RecipeBrowser, { RecipeFilters } from './components/RecipeBrowser';
+import RecipeBrowser, { FeaturedRecipeSkeleton, RecipeFilters } from './components/RecipeBrowser';
 import RecipeDetail from './components/RecipeDetail';
 import { getComments, saveComments } from './services/commentService';
 import { getRecipes } from './services/recipeService';
@@ -137,10 +137,10 @@ export default function App() {
       <SiteHeader language={language} darkMode={isDarkMode} onToggleDarkMode={() => setIsDarkMode((current) => !current)} onToggleLanguage={() => setLanguage((current) => current === 'en' ? 'mm' : 'en')} />
       <RecipeFilters language={language} categories={categories} selectedCategory={selectedCategory} searchQuery={searchQuery} onCategoryChange={changeCategory} onSearchChange={setSearchQuery} />
       <main className="mx-auto max-w-4xl space-y-6 px-4 py-8 sm:px-6">
-        {isLoadingRecipes ? <p className="text-sm text-slate-500">{language === 'en' ? 'Loading recipes...' : 'ဟင်းချက်နည်းများ ဖွင့်နေသည်...'}</p> : hasRecipeLoadError || !activeRecipe ? <p className="text-sm text-rose-600">{language === 'en' ? 'Recipes could not be loaded.' : 'ဟင်းချက်နည်းများ ဖွင့်၍မရပါ။'}</p> : <>
+        {isLoadingRecipes ? selectedCategory === 'All' ? <FeaturedRecipeSkeleton /> : <RecipeBrowser language={language} recipes={[]} categories={categories} selectedCategory={selectedCategory} searchQuery={searchQuery} activeRecipeId="" isLoading onSelectRecipe={selectRecipe} onCategoryChange={changeCategory} onSearchChange={setSearchQuery} /> : hasRecipeLoadError || !activeRecipe ? <p className="text-sm text-rose-600">{language === 'en' ? 'Recipes could not be loaded.' : 'ဟင်းချက်နည်းများ ဖွင့်၍မရပါ။'}</p> : <>
           {selectedCategory !== 'All' && <div ref={recipeListRef} className={`scroll-mt-20 ${isCompactDetailOpen ? 'hidden' : 'block'}`}><RecipeBrowser language={language} recipes={displayedRecipes} categories={categories} selectedCategory={selectedCategory} searchQuery={searchQuery} activeRecipeId={activeRecipe.id} onSelectRecipe={selectRecipe} onCategoryChange={changeCategory} onSearchChange={setSearchQuery} /></div>}
           <div className={`scroll-mt-20 ${selectedCategory !== 'All' && !isCompactDetailOpen ? 'hidden' : 'block'}`}>
-            <RecipeDetail isFeatured={selectedCategory === 'All'} showBackToRecipes={selectedCategory !== 'All' && isCompactDetailOpen} onBackToRecipes={backToRecipes} recipe={activeRecipe} language={language} activePhoto={activePhoto} completedSteps={completedSteps} likes={likesCount[activeRecipe.id] ?? 0} liked={!!hasLiked[activeRecipe.id]} saved={!!savedRecipes[activeRecipe.id]} comments={comments[activeRecipe.id] ?? []} author={newCommentAuthor} commentText={newCommentText} onPhotoChange={setActivePhoto} onToggleStep={toggleStep} onToggleLike={toggleLike} onToggleSave={() => setSavedRecipes((previous) => ({ ...previous, [activeRecipe.id]: !previous[activeRecipe.id] }))} onAuthorChange={setNewCommentAuthor} onCommentChange={setNewCommentText} onAddComment={addComment} />
+            <RecipeDetail key={activeRecipe.id} isFeatured={selectedCategory === 'All'} showBackToRecipes={selectedCategory !== 'All' && isCompactDetailOpen} onBackToRecipes={backToRecipes} recipe={activeRecipe} language={language} activePhoto={activePhoto} completedSteps={completedSteps} likes={likesCount[activeRecipe.id] ?? 0} liked={!!hasLiked[activeRecipe.id]} saved={!!savedRecipes[activeRecipe.id]} comments={comments[activeRecipe.id] ?? []} author={newCommentAuthor} commentText={newCommentText} onPhotoChange={setActivePhoto} onToggleStep={toggleStep} onToggleLike={toggleLike} onToggleSave={() => setSavedRecipes((previous) => ({ ...previous, [activeRecipe.id]: !previous[activeRecipe.id] }))} onAuthorChange={setNewCommentAuthor} onCommentChange={setNewCommentText} onAddComment={addComment} />
           </div>
         </>}
       </main>

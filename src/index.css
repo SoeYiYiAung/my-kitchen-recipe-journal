@@ -21,6 +21,47 @@ input {
   font: inherit;
 }
 
+@keyframes recipe-card-arrive {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes recipe-detail-arrive {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.995);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.recipe-card-enter {
+  animation: recipe-card-arrive 420ms cubic-bezier(0.2, 0.75, 0.25, 1) both;
+}
+
+.recipe-detail-enter {
+  animation: recipe-detail-arrive 360ms cubic-bezier(0.2, 0.75, 0.25, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
 html.dark {
   color-scheme: dark;
   background: #171a1e;
@@ -82,7 +123,8 @@ html.dark [class~="text-slate-400"] {
   color: #9da2a5;
 }
 
-html.dark [class~="bg-amber-100"] {
+html.dark [class~="bg-amber-100"],
+html.dark [class~="bg-amber-100/80"] {
   background-color: #49391f;
 }
 

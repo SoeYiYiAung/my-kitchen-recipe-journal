@@ -1,4 +1,5 @@
-import { Clock, Flame, Search, Star, Utensils } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { ChevronLeft, ChevronRight, Clock, Flame, Search, Star, Utensils } from 'lucide-react';
 import type { Language, Recipe } from '../types';
 
 interface RecipeBrowserProps {
@@ -8,6 +9,7 @@ interface RecipeBrowserProps {
   selectedCategory: string;
   searchQuery: string;
   activeRecipeId: string;
+  isLoading?: boolean;
   onCategoryChange: (category: string) => void;
   onSearchChange: (query: string) => void;
   onSelectRecipe: (id: string) => void;
@@ -32,12 +34,19 @@ export function RecipeFilters({ language, categories, selectedCategory, searchQu
   );
 }
 
-export default function RecipeBrowser({ language, recipes, selectedCategory, searchQuery: _query, activeRecipeId, onSelectRecipe }: RecipeBrowserProps) {
+export default function RecipeBrowser({ language, recipes, selectedCategory, searchQuery, activeRecipeId, isLoading = false, onSelectRecipe }: RecipeBrowserProps) {
+  const [page, setPage] = useState(1);
+  const pageSize = 5;
+  const pageCount = Math.max(1, Math.ceil(recipes.length / pageSize));
+  const pageRecipes = recipes.slice((page - 1) * pageSize, page * pageSize);
+
+  useEffect(() => setPage(1), [recipes, selectedCategory, searchQuery]);
+
   return (
     <section className="space-y-4">
-      <h3 className="mb-2 flex items-center gap-2 text-base font-bold text-slate-800"><Utensils className="h-4 w-4 text-amber-500" />{selectedCategory === 'All' ? (language === 'en' ? 'Latest Recipe' : 'နောက်ဆုံးထည့်ထားသော ဟင်းချက်နည်း') : (language === 'en' ? 'Recipes' : 'ဟင်းချက်နည်းများ')} <span className="text-xs font-normal text-slate-400">({recipes.length})</span></h3>
-      {recipes.length === 0 ? <div className="rounded-2xl border border-slate-200 bg-white p-8 text-center text-sm text-slate-500">{language === 'en' ? 'No recipes found matching your search.' : 'ရှာဖွေမှုနှင့် ကိုက်ညီသော ဟင်းချက်နည်း မရှိပါ။'}</div> : recipes.map((recipe) => (
-        <button key={recipe.id} type="button" onClick={() => onSelectRecipe(recipe.id)} aria-current={recipe.id === activeRecipeId ? 'true' : undefined} className={`block w-full cursor-pointer rounded-2xl border p-3.5 text-left transition-all ${recipe.id === activeRecipeId ? 'border-amber-400 bg-white shadow-md ring-2 ring-amber-100' : 'border-slate-200/80 bg-white/70 hover:bg-white hover:shadow-sm'}`}>
+      <h3 className="mb-2 flex items-center gap-2 text-base font-bold text-slate-800"><Utensils className="h-4 w-4 text-amber-500" />{selectedCategory === 'All' ? (language === 'en' ? 'Latest Recipe' : 'နောက်ဆုံးထည့်ထားသော ဟင်းချက်နည်း') : (language === 'en' ? 'Recipes' : 'ဟင်းချက်နည်းများ')} <span className="text-xs font-normal text-slate-400">({isLoading ? '...' : recipes.length})</span></h3>
+      {isLoading ? <div className="space-y-3" aria-label={language === 'en' ? 'Loading recipes' : 'ဟင်းချက်နည်းများ ဖွင့်နေသည်'}>{Array.from({ length: pageSize }, (_, index) => <div key={index} className="flex animate-pulse items-center gap-3.5 rounded-2xl border border-slate-200/80 bg-white p-3.5 dark:border-slate-700 dark:bg-slate-800"><div className="h-20 w-20 shrink-0 rounded-xl bg-slate-200 dark:bg-slate-700" /><div className="min-w-0 flex-1 space-y-2"><div className="h-4 w-1/3 rounded bg-slate-200 dark:bg-slate-700" /><div className="h-4 w-3/4 rounded bg-slate-200 dark:bg-slate-700" /><div className="h-3 w-1/2 rounded bg-slate-200 dark:bg-slate-700" /></div></div>)}</div> : recipes.length === 0 ? <div className="rounded-2xl border border-slate-200 bg-white p-8 text-center text-sm text-slate-500">{language === 'en' ? 'No recipes found matching your search.' : 'ရှာဖွေမှုနှင့် ကိုက်ညီသော ဟင်းချက်နည်း မရှိပါ။'}</div> : pageRecipes.map((recipe, index) => (
+        <button key={recipe.id} type="button" onClick={() => onSelectRecipe(recipe.id)} aria-current={recipe.id === activeRecipeId ? 'true' : undefined} style={{ animationDelay: `${index * 70}ms` }} className={`recipe-card-enter block w-full cursor-pointer rounded-2xl border p-3.5 text-left transition-all duration-200 hover:-translate-y-0.5 ${recipe.id === activeRecipeId ? 'border-amber-400 bg-white shadow-md ring-2 ring-amber-100' : 'border-slate-200/80 bg-white/70 hover:bg-white hover:shadow-sm'}`}>
           <div className="flex items-center gap-3.5">
             <img src={recipe.bannerImage} alt={recipe.titleEn} className="h-20 w-20 shrink-0 rounded-xl border border-slate-100 object-cover" />
             <div className="min-w-0 flex-1">
@@ -49,6 +58,25 @@ export default function RecipeBrowser({ language, recipes, selectedCategory, sea
           </div>
         </button>
       ))}
+      {!isLoading && pageCount > 1 && <nav aria-label={language === 'en' ? 'Recipe pages' : 'ဟင်းချက်နည်း စာမျက်နှာများ'} className="flex items-center justify-between border-t border-slate-200 pt-4">
+        <span className="text-xs text-slate-500">{language === 'en' ? `Page ${page} of ${pageCount}` : `${page} / ${pageCount} စာမျက်နှာ`}</span>
+        <div className="flex items-center gap-2">
+          <button type="button" onClick={() => setPage((current) => Math.max(1, current - 1))} disabled={page === 1} aria-label={language === 'en' ? 'Previous page' : 'ယခင်စာမျက်နှာ'} className="flex h-9 w-9 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-700 transition-colors hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-40"><ChevronLeft className="h-4 w-4" /></button>
+          <button type="button" onClick={() => setPage((current) => Math.min(pageCount, current + 1))} disabled={page === pageCount} aria-label={language === 'en' ? 'Next page' : 'နောက်စာမျက်နှာ'} className="flex h-9 w-9 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-700 transition-colors hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-40"><ChevronRight className="h-4 w-4" /></button>
+        </div>
+      </nav>}
     </section>
   );
+}
+
+export function FeaturedRecipeSkeleton() {
+  return <div aria-label="Loading latest recipe" className="animate-pulse overflow-hidden rounded-3xl border border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-800">
+    <div className="h-80 bg-slate-200 dark:bg-slate-700 sm:h-[28rem]" />
+    <div className="space-y-3 p-6">
+      <div className="h-5 w-32 rounded-full bg-slate-200 dark:bg-slate-700" />
+      <div className="h-8 w-2/3 rounded bg-slate-200 dark:bg-slate-700" />
+      <div className="h-4 w-1/2 rounded bg-slate-200 dark:bg-slate-700" />
+      <div className="h-24 rounded-xl bg-slate-100 dark:bg-slate-700" />
+    </div>
+  </div>;
 }

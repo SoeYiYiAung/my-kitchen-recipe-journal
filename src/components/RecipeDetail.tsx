@@ -66,7 +66,7 @@ export default function RecipeDetail(props: RecipeDetailProps) {
         <span className="flex h-7 w-7 items-center justify-center rounded-full bg-amber-100 text-amber-800 transition-colors group-hover:bg-amber-200"><ArrowLeft className="h-4 w-4" /></span>
         <span>{language === 'en' ? 'Back to recipes' : 'ဟင်းချက်နည်းများသို့ ပြန်သွားရန်'}</span>
       </button>}
-      <article className="overflow-hidden rounded-3xl border border-slate-200/80 bg-white shadow-sm">
+      <article className="recipe-detail-enter overflow-hidden rounded-3xl border border-slate-200/80 bg-white shadow-sm">
       <div className={`overflow-hidden ${isFeatured ? 'h-80 sm:h-[28rem]' : 'h-64 sm:h-80'}`}>
         <img src={recipe.gallery?.[activePhoto] || recipe.bannerImage} alt={recipe.titleEn} className="h-full w-full object-cover" />
       </div>
