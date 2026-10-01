@@ -14,6 +14,13 @@ function getRecipeIdFromUrl(recipes: Recipe[]) {
 
 export default function App() {
   const [language, setLanguage] = useState<Language>('en');
+  const [isDarkMode, setIsDarkMode] = useState(() => {
+    try {
+      return localStorage.getItem('happy-yum-diary-theme') === 'dark';
+    } catch {
+      return false;
+    }
+  });
   const [recipes, setRecipes] = useState<Recipe[]>([]);
   const [isLoadingRecipes, setIsLoadingRecipes] = useState(true);
   const [hasRecipeLoadError, setHasRecipeLoadError] = useState(false);
@@ -32,6 +39,15 @@ export default function App() {
   const recipeListRef = useRef<HTMLDivElement>(null);
 
   const categories = useMemo(() => ['All', ...Array.from(new Set(recipes.map((recipe) => recipe.category))).sort()], [recipes]);
+
+  useEffect(() => {
+    document.documentElement.classList.toggle('dark', isDarkMode);
+    try {
+      localStorage.setItem('happy-yum-diary-theme', isDarkMode ? 'dark' : 'light');
+    } catch {
+      // Theme switching still works for this session if storage is unavailable.
+    }
+  }, [isDarkMode]);
 
   useEffect(() => {
     let isCurrent = true;
@@ -89,6 +105,7 @@ export default function App() {
   };
   const changeCategory = (category: string) => {
     setSelectedCategory(category);
+    if (category === 'All') setSearchQuery('');
     const normalizedSearch = searchQuery.toLowerCase();
     const nextRecipe = category === 'All' ? recipes[0] : recipes.find((recipe) =>
       (recipe.category === category || recipe.tags.includes(category)) &&
@@ -117,7 +134,7 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-[#FAF8F5] font-sans text-slate-800 selection:bg-amber-100 selection:text-amber-900">
-      <SiteHeader language={language} onToggleLanguage={() => setLanguage((current) => current === 'en' ? 'mm' : 'en')} />
+      <SiteHeader language={language} darkMode={isDarkMode} onToggleDarkMode={() => setIsDarkMode((current) => !current)} onToggleLanguage={() => setLanguage((current) => current === 'en' ? 'mm' : 'en')} />
       <RecipeFilters language={language} categories={categories} selectedCategory={selectedCategory} searchQuery={searchQuery} onCategoryChange={changeCategory} onSearchChange={setSearchQuery} />
       <main className="mx-auto max-w-4xl space-y-6 px-4 py-8 sm:px-6">
         {isLoadingRecipes ? <p className="text-sm text-slate-500">{language === 'en' ? 'Loading recipes...' : 'ဟင်းချက်နည်းများ ဖွင့်နေသည်...'}</p> : hasRecipeLoadError || !activeRecipe ? <p className="text-sm text-rose-600">{language === 'en' ? 'Recipes could not be loaded.' : 'ဟင်းချက်နည်းများ ဖွင့်၍မရပါ။'}</p> : <>

@@ -20,3 +20,110 @@ button,
 input {
   font: inherit;
 }
+
+html.dark {
+  color-scheme: dark;
+  background: #171a1e;
+}
+
+html.dark body {
+  background: #171a1e;
+  color: #e8e5df;
+}
+
+html.dark #root > div {
+  background-color: #171a1e;
+}
+
+html.dark header {
+  border-color: #35383b;
+  background-color: rgb(30 33 36 / 92%);
+}
+
+html.dark section.border-b {
+  border-color: #35383b;
+  background-image: linear-gradient(to bottom, rgb(96 68 36 / 32%), rgb(43 38 33 / 24%), transparent);
+}
+
+html.dark article,
+html.dark [class~="bg-white"],
+html.dark [class~="bg-white/70"],
+html.dark [class~="bg-white/90"] {
+  border-color: #3a3d40;
+  background-color: #232629;
+}
+
+html.dark [class*="bg-slate-50"],
+html.dark [class~="bg-slate-100"] {
+  background-color: #2b2f32;
+}
+
+html.dark [class~="bg-slate-200"] {
+  background-color: #393e42;
+}
+
+html.dark [class*="border-slate-100"],
+html.dark [class*="border-slate-200"] {
+  border-color: #3b4044;
+}
+
+html.dark [class~="text-slate-900"],
+html.dark [class~="text-slate-800"],
+html.dark [class~="text-slate-700"] {
+  color: #f1eee8;
+}
+
+html.dark [class~="text-slate-600"],
+html.dark [class~="text-slate-500"] {
+  color: #c0c2c1;
+}
+
+html.dark [class~="text-slate-400"] {
+  color: #9da2a5;
+}
+
+html.dark [class~="bg-amber-100"] {
+  background-color: #49391f;
+}
+
+html.dark [class~="text-amber-800"] {
+  color: #f2c778;
+}
+
+html.dark [class~="bg-rose-50"] {
+  background-color: #402b30;
+}
+
+html.dark [class~="bg-rose-100"] {
+  background-color: #482e35;
+}
+
+html.dark [class~="text-rose-600"] {
+  color: #ff9ba8;
+}
+
+html.dark [class~="bg-emerald-50/50"] {
+  background-color: rgb(27 68 54 / 48%);
+}
+
+html.dark [class~="hover:bg-slate-100"]:hover,
+html.dark [class~="hover:bg-slate-200"]:hover,
+html.dark [class~="hover:bg-white"]:hover {
+  background-color: #373b3e;
+}
+
+html.dark input {
+  border-color: #42474b;
+  background-color: #232629;
+  color: #f1eee8;
+}
+
+html.dark input::placeholder {
+  color: #a5aaad;
+}
+
+html.dark footer {
+  border-color: #35383b;
+  background-color: #1e2124;
+  color: #b6b9ba;
+}

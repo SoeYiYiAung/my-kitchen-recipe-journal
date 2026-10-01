@@ -20,13 +20,13 @@ export function RecipeFilters({ language, categories, selectedCategory, searchQu
         <span className="mb-3 inline-flex items-center rounded-full bg-amber-100/80 px-3 py-1 text-xs font-semibold text-amber-800">{language === 'en' ? 'Recipes from My Kitchen' : 'ကျွန်မရဲ့ မီးဖိုချောင်မှ ဟင်းလျာများ'}</span>
         <h2 className="mx-auto max-w-2xl font-display text-2xl font-bold leading-snug text-slate-900 sm:text-4xl">{language === 'en' ? 'Made with Love, Shared with Joy' : 'မေတ္တာနဲ့ချက်၊ ပျော်ရွှင်စွာမျှဝေ'}</h2>
         <p className="mx-auto mt-2 max-w-xl text-sm text-slate-600 sm:text-base">{language === 'en' ? 'A little collection of the delicious dishes I love to make and share.' : 'ကိုယ်တိုင်နှစ်သက်စွာ ချက်ပြုတ်ပြီး မျှဝေထားတဲ့ အရသာရှိသော ဟင်းလျာလေးများ။'}</p>
-        <div className="relative mx-auto mt-6 max-w-md">
-          <Search className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
-          <input aria-label="Search recipes" placeholder={language === 'en' ? 'Search dishes, e.g. Mohinga, Tempura, Rice...' : 'ရှာဖွေရန်... ဥပမာ - မုန့်ဟင်းခါး၊ အကြော်၊ ထမင်း'} value={searchQuery} onChange={(event) => onSearchChange(event.target.value)} className="w-full rounded-2xl border border-slate-200 bg-white py-2.5 pl-10 pr-4 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-amber-300" />
-        </div>
         <div className="mt-5 flex flex-wrap items-center justify-center gap-2">
           {categories.map((category) => <button key={category} onClick={() => onCategoryChange(category)} aria-pressed={selectedCategory === category} className={`rounded-xl px-3.5 py-1.5 text-xs font-medium transition-colors sm:text-sm ${selectedCategory === category ? 'bg-amber-500 text-white shadow-md shadow-amber-200' : 'border border-slate-200/80 bg-white text-slate-600 hover:bg-slate-100'}`}>{category === 'All' ? (language === 'en' ? 'Latest' : 'နောက်ဆုံး') : category}</button>)}
         </div>
+        {selectedCategory !== 'All' && <div className="relative mx-auto mt-4 max-w-md">
+          <Search className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+          <input aria-label="Search recipes" placeholder={language === 'en' ? 'Search dishes, e.g. Mohinga, Tempura, Rice...' : 'ရှာဖွေရန်... ဥပမာ - မုန့်ဟင်းခါး၊ အကြော်၊ ထမင်း'} value={searchQuery} onChange={(event) => onSearchChange(event.target.value)} className="w-full rounded-2xl border border-slate-200 bg-white py-2.5 pl-10 pr-4 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-amber-300" />
+        </div>}
       </div>
     </section>
   );
